@@ -78,11 +78,38 @@ const LearnerSubmissions = [
 
 function getLearnerData(course, ag, submissions) {
 // here, we would process this data to achieve the desired result.
-const result = [
 
-];
+try {
 
-return result;
+    if(ag.course_id !== course.id){
+        throw new Error("Invalid Identification: Assignment group ID doesn't equal to course ID")
+    }
+
+    idOfAssignment = {}
+    for(let a of ag.assignments) idOfAssignment[a.id] = a
+
+    const learners = {}
+    const result = []
+
+    for(const record of submissions){
+        const learnerId = record.learner_id
+        const assignmentId = record.assignment_id
+
+        const assignment = idOfAssignment[assignmentId]
+
+        if(!assignment) continue
+
+        const dueDate = new Date(assignment.due_at)
+        const submissionDate = new Date(record.submission.submitted_at)
+        // console.log(learnerId, assignmentId, assignment)
+        console.log(dueDate, submissionDate)
+    }
+
+    return result;
+} catch (error) {
+    console.error(error.message)
+    return []
+}
 }
 
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
