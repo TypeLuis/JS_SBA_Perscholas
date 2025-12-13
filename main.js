@@ -99,10 +99,12 @@ try {
 
         if(!assignment) continue
 
+        const points_possible = assignment.points_possible
         const dueDate = new Date(assignment.due_at)
         const submissionDate = new Date(record.submission.submitted_at)
+        let score = record.submission.score
         // console.log(learnerId, assignmentId, assignment)
-        console.log(dueDate, submissionDate)
+        console.log(dueDate, submissionDate, score)
     }
 
     return result;
