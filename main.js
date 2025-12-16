@@ -128,7 +128,7 @@ try {
         learners[learnerId]["id"] = learnerId
         learners[learnerId]["totalEarned"] += score
         learners[learnerId]["totalPossible"] += pointsPossible
-        learners[learnerId].scores[assignmentId] = score / pointsPossible
+        learners[learnerId]["scores"][assignmentId] = score / pointsPossible
         // console.log(obj)
         // learners[learnerId] = obj
 
