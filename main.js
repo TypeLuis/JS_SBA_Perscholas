@@ -1,3 +1,10 @@
+const SBA_Object = {
+    test : "hello",
+    testing() {console.log(this.test)}
+}
+
+SBA_Object.testing()
+
 // The provided course information.
 const CourseInfo = {
 id: 451,
@@ -88,11 +95,11 @@ try {
     idOfAssignment = {}
     for(let a of ag.assignments) idOfAssignment[a.id] = a
 
-    const learners = {}
+    const students = {}
     const result = []
 
     for(const record of submissions){
-        const learnerId = record.learner_id
+        const studentId = record.learner_id
         const assignmentId = record.assignment_id
 
         const assignment = idOfAssignment[assignmentId]
@@ -103,40 +110,66 @@ try {
         const dueDate = new Date(assignment.due_at)
         const submissionDate = new Date(record.submission.submitted_at)
         let score = record.submission.score
+        const todayDate = new Date()
 
-        // console.log(learnerId, assignmentId, assignment)
-        console.log(dueDate, submissionDate, score)
-
+        
+        // console.log(studentId, assignmentId, assignment)
+        // console.log(dueDate, submissionDate, score)
+        
+        if (dueDate > todayDate) continue
         if (submissionDate > dueDate) score -= pointsPossible * .1
         if (score < 0) score = 0 // If subtracting score made it less than 0
 
-        // console.log(learnerId, score, pointsPossible)
+        // console.log(studentId, score, pointsPossible)
         // console.log(assignmentId)
 
-        if(!learners[learnerId]){
-            learners[learnerId] = {
-                id: learnerId,
+        if(!students[studentId]){
+            students[studentId] = {
+                id: studentId,
                 totalEarned: 0,
                 totalPossible: 0,
                 scores: {}
             }
             // obj.score = {}
         }
-        learnerId === learners[learnerId]["id"]
+
+        /*
+            BLOCKER: was going to create an obj without initializing it previosly 
+            making it refresh the scores obj everytime. The best way to get 
+            around that was to initialize the object outside and inside the loop.
+            Inside the loop, if obj[id] doesn't exist is the only time it would
+            initalize. Initialized keys with their values too to make sure the
+            code can += as well. Will leave some code commented out
+        */
         // const obj = {}
-        // learners[learnerId].scores = {}
-        learners[learnerId]["id"] = learnerId
-        learners[learnerId]["totalEarned"] += score
-        learners[learnerId]["totalPossible"] += pointsPossible
-        learners[learnerId]["scores"][assignmentId] = score / pointsPossible
+        // students[studentId].scores = {}
+        students[studentId]["id"] = studentId
+        students[studentId]["totalEarned"] += score
+        students[studentId]["totalPossible"] += pointsPossible
+        students[studentId]["scores"][assignmentId] = score / pointsPossible
         // console.log(obj)
-        // learners[learnerId] = obj
+        // students[studentId] = obj
 
     }
-    console.log(learners)
+    // console.log(students)
 
-    for(const learner in learners){
+    for(const key in students){
+        const student = students[key]
+        // console.log(student)
 
+        if(student.totalPossible === 0){
+            delete student[key]
+            continue
+        }
+
+        const obj = {
+            id: student.id,
+            avg: student.totalEarned / student.totalPossible
+        }
+
+        for(const key in student.scores) obj[key] = Number(student.scores[key].toFixed(3))
+
+        result.push(obj)
     }
 
     return result;
