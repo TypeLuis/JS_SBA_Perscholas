@@ -99,12 +99,44 @@ try {
 
         if(!assignment) continue
 
-        const points_possible = assignment.points_possible
+        const pointsPossible = assignment.points_possible
         const dueDate = new Date(assignment.due_at)
         const submissionDate = new Date(record.submission.submitted_at)
         let score = record.submission.score
+
         // console.log(learnerId, assignmentId, assignment)
         console.log(dueDate, submissionDate, score)
+
+        if (submissionDate > dueDate) score -= pointsPossible * .1
+        if (score < 0) score = 0 // If subtracting score made it less than 0
+
+        // console.log(learnerId, score, pointsPossible)
+        // console.log(assignmentId)
+
+        if(!learners[learnerId]){
+            learners[learnerId] = {
+                id: learnerId,
+                totalEarned: 0,
+                totalPossible: 0,
+                scores: {}
+            }
+            // obj.score = {}
+        }
+        learnerId === learners[learnerId]["id"]
+        // const obj = {}
+        // learners[learnerId].scores = {}
+        learners[learnerId]["id"] = learnerId
+        learners[learnerId]["totalEarned"] += score
+        learners[learnerId]["totalPossible"] += pointsPossible
+        learners[learnerId].scores[assignmentId] = score / pointsPossible
+        // console.log(obj)
+        // learners[learnerId] = obj
+
+    }
+    console.log(learners)
+
+    for(const learner in learners){
+
     }
 
     return result;
